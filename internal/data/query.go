@@ -19,3 +19,15 @@ func CreateUser(ctx context.Context, db *sql.DB, usr *User) (*User, error) {
 	}
 	return &user, nil
 }
+
+func UpdateUserStatus(db *sql.DB, isActive bool, id int) error {
+	// query := `UPDATE users SET is_active=$1 WHERE id=$2`
+	// _, err := db.Exec(query, isActive, id)
+	// if err != nil {
+	// 	return err
+	// }
+	_ = db
+	_ = isActive
+	_ = id
+	return nil
+}

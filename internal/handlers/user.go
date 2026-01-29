@@ -30,7 +30,7 @@ func CreateUser(db *sql.DB) http.HandlerFunc {
 		user := data.User{
 			Name: userRequest.Name,
 			Email: userRequest.Email,
-			IsActive: true,
+			IsActive: false,
 		}
 		userService := data.NewUserService(db)
 		usr, err := userService.CreateUser(r.Context(), &user)
@@ -39,6 +39,16 @@ func CreateUser(db *sql.DB) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return 
 		}
+		userTask := data.NewUserTask()
+		go userTask.ProcessEvent()
+		userTask.WriteEvent(data.UserCreateEvent{
+			Id: usr.Id,
+			Email: usr.Email,
+			Name: usr.Name,
+			IsActive: true,
+		})
+		close(userTask.Event)
+
 		api.WriteJsonResponse(w, http.StatusCreated, api.UserResponse{
 			Id: usr.Id,
 			Name: usr.Name,

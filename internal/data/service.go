@@ -39,3 +39,12 @@ func (usrv *UserService) CreateUser(ctx context.Context, usr *User) (*User, erro
 	}
 	return user, nil
 }
+
+func (usrv *UserService) UpdateUserStatus(isActive bool, id int) error {
+	// err := UpdateUserStatus(usrv.db, isActive, id)
+	// if err != nil {
+	// 	fmt.Println(err.Error())
+	// 	return err
+	// }
+	return nil
+}
