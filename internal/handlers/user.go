@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"user-service/internal/api"
@@ -40,7 +41,7 @@ func CreateUser(db *sql.DB) http.HandlerFunc {
 			return 
 		}
 		userTask := data.NewUserTask()
-		go userTask.ProcessEvent()
+		go userTask.ProcessEvent(r.Context())
 		userTask.WriteEvent(data.UserCreateEvent{
 			Id: usr.Id,
 			Email: usr.Email,
@@ -55,5 +56,20 @@ func CreateUser(db *sql.DB) http.HandlerFunc {
 			Email: usr.Email,
 			IsActive: usr.IsActive,
 		})
+	}
+}
+
+func GetUser(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			return 
+		}
+		userId := r.URL.Query().Get("user_id")
+		fmt.Println(userId)
+		//if userId{}
+		userService := data.NewUserService(db)
+		users, _ := userService.GetUsers(r.Context())
+		json.NewEncoder(w).Encode(&users)
 	}
 }

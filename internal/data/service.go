@@ -40,11 +40,15 @@ func (usrv *UserService) CreateUser(ctx context.Context, usr *User) (*User, erro
 	return user, nil
 }
 
-func (usrv *UserService) UpdateUserStatus(isActive bool, id int) error {
-	// err := UpdateUserStatus(usrv.db, isActive, id)
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// 	return err
-	// }
+func (usrv *UserService) UpdateUserStatus(ctx context.Context, isActive bool, id int) error {
+	err := UpdateUser(ctx, usrv.db, isActive, id)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
 	return nil
+}
+
+func (usrv *UserService) GetUsers(ctx context.Context)  (*[]User, error) {
+	return GetUsers(ctx, usrv.db, 100, 0)
 }

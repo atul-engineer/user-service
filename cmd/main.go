@@ -25,6 +25,7 @@ func main() {
 func initServer(db *sql.DB) *http.Server {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/user", handlers.CreateUser(db))
+	mux.HandleFunc("/users", handlers.GetUser(db))
 
 	server := http.Server{
 		Addr: ":8000",
